@@ -26,7 +26,6 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFiltersMobile, setShowFiltersMobile] = useState<boolean>(false);
-    console.log(showFiltersMobile, setShowFiltersMobile);
     const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
@@ -113,7 +112,7 @@ const SectionContainer = styled(EarnSection)`
 `;
 
 const SectionContent = styled(FlexDivColumn)`
-    height: 100%;
+    height: calc(100% - 50px);
 `;
 
 const FilterContainer = styled.div`
