@@ -7,7 +7,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide, ZeroExErrorResponse } from 'types/options';
-import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, formatPercentageWithSign, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -43,14 +43,11 @@ import {
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { FlexDivEnd, FlexDivColumn, FlexDivRow } from 'theme/common';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import { get } from 'lodash';
 import Web3 from 'web3';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 import ValidationMessage from 'components/ValidationMessage';
 import onboardConnector from 'utils/onboardConnector';
 import NumericInput from '../../components/NumericInput';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { dispatchMarketNotification } from '../../../../../utils/options';
@@ -86,7 +83,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
     const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
-    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
 
@@ -145,12 +141,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const buyToken = isBuy ? baseToken : SynthsUSD.address;
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
-    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    const addressToApprove = get0xExchangeProxyAddress(networkId);
 
     const baseUrl = get0xBaseURL(networkId);
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, baseToken, {
         enabled: isAppReady,
@@ -303,7 +296,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             }
         };
         get0xPrice();
-    }, [amount, slippage, hasAllowance, walletAddress, sellToken, buyToken, ethRate, isAmountEntered, isSlippageValid]);
+    }, [amount, slippage, hasAllowance, walletAddress, sellToken, buyToken, isAmountEntered, isSlippageValid]);
 
     const handle0xErrorResponse = (response: ZeroExErrorResponse) => {
         console.log(response);
