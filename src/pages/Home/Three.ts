@@ -8,14 +8,15 @@ const MIN_SPEED = 0.5;
 const MAX_SPEED = 10;
 const ACCELERATION = 0.1;
 const CAM_POSITION = 400;
-const STAR = LOADER.load(window.location.origin + '/three/star.png');
-const SMOKE = LOADER.load(window.location.origin + '/three/smoke.png');
+const STAR = LOADER.load(window.location.origin + '/three/star.svg');
 const PARTICLES_CNT = window.innerWidth > window.screen.height ? 5 * window.innerWidth : 5 * window.screen.height;
-const SMOKE_SIZE = 200;
-const SMOKE_CNT =
-    window.innerWidth > window.screen.height
-        ? (100 * window.innerWidth) / SMOKE_SIZE
-        : (100 * window.screen.height) / SMOKE_SIZE;
+
+// const SMOKE = LOADER.load(window.location.origin + '/three/smoke.png');
+// const SMOKE_SIZE = 200;
+// const SMOKE_CNT =
+//     window.innerWidth > window.screen.height
+//         ? (100 * window.innerWidth) / SMOKE_SIZE
+//         : (100 * window.screen.height) / SMOKE_SIZE;
 
 let init = false;
 let eventListenerSet = false;
@@ -43,37 +44,36 @@ export const setupThreeJS = (renderer: WebGLRenderer) => {
         const FAR = 1000;
         scene.fog = new THREE.Fog(COLOR, NEAR, FAR);
 
-        renderer.setClearColor('#04045a');
         camera.position.z = CAM_POSITION;
         renderer.setSize(window.innerWidth, window.screen.height);
         root?.appendChild(renderer.domElement);
 
-        const smokeGeo = new THREE.PlaneBufferGeometry(SMOKE_SIZE, SMOKE_SIZE);
+        // const smokeGeo = new THREE.PlaneBufferGeometry(SMOKE_SIZE, SMOKE_SIZE);
 
-        const smokeMaterial = new THREE.MeshBasicMaterial({
-            map: SMOKE,
-            transparent: true,
-            opacity: 0.07,
-            blending: THREE.NormalBlending,
-        });
+        // const smokeMaterial = new THREE.MeshBasicMaterial({
+        //     map: SMOKE,
+        //     transparent: true,
+        //     opacity: 0.07,
+        //     blending: THREE.NormalBlending,
+        // });
 
-        for (let p = 0, l = SMOKE_CNT; p < l; p++) {
-            const smoke = new THREE.Mesh(smokeGeo, smokeMaterial);
+        // for (let p = 0, l = SMOKE_CNT; p < l; p++) {
+        //     const smoke = new THREE.Mesh(smokeGeo, smokeMaterial);
 
-            smoke.position.set(
-                (Math.random() - 0.5) * 2 * (Math.random() * window.innerWidth),
-                (Math.random() - 0.5) * 2 * (Math.random() * window.screen.height),
-                CAM_POSITION - 300 + Math.random() * 400
-            );
-            scene.add(smoke);
-            (smoke as any).myZ = smoke.position.z;
-            smoke_particles.push(smoke);
-        }
+        //     smoke.position.set(
+        //         (Math.random() - 0.5) * 2 * (Math.random() * window.innerWidth),
+        //         (Math.random() - 0.5) * 2 * (Math.random() * window.screen.height),
+        //         CAM_POSITION - 300 + Math.random() * 400
+        //     );
+        //     scene.add(smoke);
+        //     (smoke as any).myZ = smoke.position.z;
+        //     smoke_particles.push(smoke);
+        // }
 
         const particlesGeo = new THREE.BufferGeometry();
         const posArr = new Float32Array(PARTICLES_CNT * 3);
         const material = new THREE.PointsMaterial({
-            size: 6.5,
+            size: 2,
             map: STAR,
             color: '#f6f6fe',
             transparent: true,

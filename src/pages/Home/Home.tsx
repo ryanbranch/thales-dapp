@@ -17,7 +17,9 @@ const Home: React.FC = () => {
     useEffect(() => {
         let renderer: WebGLRenderer | null = null;
         try {
-            renderer = new WebGLRenderer();
+            renderer = new WebGLRenderer({
+                alpha: true,
+            });
             if (renderer !== null) {
                 setupThreeJS(renderer);
             }
