@@ -921,5 +921,6 @@
             "insufficient-balance": "餘額不足",
             "button-text": "獲得 sUSD"
         }
-    }
+    },
+    "test-entry": "測試入口"
 }

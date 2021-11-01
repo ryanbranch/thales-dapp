@@ -921,5 +921,6 @@
             },
             "ratio": "Ratio"
         }
-    }
+    },
+    "test-entry": "Test entry"
 }
