@@ -896,7 +896,8 @@
                 "days-short": "d",
                 "hours-short": "h",
                 "minutes-short": "м",
-                "seconds-short": "с"
+                "seconds-short": "с",
+                "test-entry": "Тестовая запись"
             },
             "long": "лонг",
             "short": "шорт",

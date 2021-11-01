@@ -878,6 +878,7 @@
         },
         "common": {
             "time-remaining": {
+                "test-entry": "Test entry",
                 "ended": "ended",
                 "years": "years",
                 "year": "year",

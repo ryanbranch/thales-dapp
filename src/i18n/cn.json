@@ -888,7 +888,8 @@
                 "days-short": "d",
                 "hours-short": "h",
                 "minutes-short": "m",
-                "seconds-short": "s"
+                "seconds-short": "s",
+                "test-entry": "測試入口"
             },
             "long": "多",
             "short": "空",
