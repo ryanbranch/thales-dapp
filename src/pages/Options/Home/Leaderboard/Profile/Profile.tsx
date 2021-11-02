@@ -2,7 +2,7 @@ import { Paper, TableContainer, TableRow, withStyles } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useProfilesQuery from 'queries/options/useProfilesQuery';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -14,6 +14,7 @@ import { DropDown, DropDownWrapper } from '../../ExploreMarkets/Mobile/CategoryF
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import { marketHeading } from '../Trades/Trades';
 import './media.scss';
+import { SortByMobile } from './Mobile/SortByMobile';
 import { TransactionFilters } from './Mobile/TransactionFilters';
 import UserAllTxTable from './UserAllTxTable';
 import UserExercisesTable from './UserExercisesTable';
@@ -48,6 +49,12 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const [filter, setFilter] = useState<string>(Filters.All);
     const [displayAddress, setDisplayAddress] = useState<string>(walletAddress);
     const [showDropdownTxTypes, setShowDropdownTxTypes] = useState(false);
+    const [showDropdownSort, setShowDropdownSort] = useState(false);
+    const [mobileSort, setMobileSort] = useState(0);
+
+    useEffect(() => {
+        window.screen.width <= 1024 ? setMobileSort(1) : '';
+    }, [filter]);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: isAppReady,
@@ -160,6 +167,75 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
         return [];
     }, [userFilter, profilesQuery]);
 
+    const getSortableColumns = (currentFilter: any) => {
+        switch (currentFilter) {
+            case Filters.Mints:
+                return sortableColumnsMints;
+            case Filters.Trades:
+                return sortableColumnsTrades;
+            case Filters.Exercises:
+                return sortableColumnsExercise;
+            case Filters.Redeemable:
+                return sortableColumnsRedeemable;
+            default:
+                return sortableColumns;
+        }
+    };
+
+    const mapColumnWithLabel = (currentFilter: any, columnId: any) => {
+        switch (currentFilter) {
+            case Filters.Mints:
+                return sortableColumnsMints.find((column) => column.id === columnId)?.label;
+            case Filters.Trades:
+                return sortableColumnsTrades.find((column) => column.id === columnId)?.label;
+            case Filters.Exercises:
+                return sortableColumnsExercise.find((column) => column.id === columnId)?.label;
+            case Filters.Redeemable:
+                return sortableColumnsRedeemable.find((column) => column.id === columnId)?.label;
+            default:
+                return sortableColumns.find((column) => column.id === columnId)?.label;
+        }
+    };
+
+    const sortableColumns: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.tx-type-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.trades.table.type-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.trades.table.price-col'), sortable: true },
+        { id: 8, label: t('options.leaderboard.profile.markets.result'), sortable: true },
+    ];
+
+    const sortableColumnsExercise: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+    ];
+
+    const sortableColumnsMints: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+    ];
+
+    const sortableColumnsTrades: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.trades.table.type-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.trades.table.price-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
+    ];
+    const sortableColumnsRedeemable: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.profile.markets.result'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+    ];
+
     return (
         <FlexDivColumnCentered className="leaderboard__profile">
             <FlexDivRow className="leaderboard__profile__search-wrap">
@@ -251,26 +327,51 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                         {t('options.leaderboard.profile.filters.redeemable')}
                     </FilterButton>
                     {window.screen.width <= 1024 && (
-                        <TransactionFilters
-                            onClick={setShowDropdownTxTypes.bind(this, !showDropdownTxTypes)}
-                            filter={t(`options.leaderboard.profile.filters.${filter.toLowerCase()}`)}
-                        >
-                            <DropDownWrapper hidden={!showDropdownTxTypes}>
-                                <DropDown>
-                                    {Object.keys(Filters).map((key) => (
-                                        <Text
-                                            className={`${
-                                                filter === Filters[key as keyof typeof Filters] ? 'selected' : ''
-                                            } text-s lh32 pale-grey capitalize`}
-                                            onClick={() => setFilter(Filters[key as keyof typeof Filters])}
-                                            key={key}
-                                        >
-                                            {t(`options.leaderboard.profile.filters.${key.toLowerCase()}`)}
-                                        </Text>
-                                    ))}
-                                </DropDown>
-                            </DropDownWrapper>
-                        </TransactionFilters>
+                        <>
+                            <TransactionFilters
+                                onClick={setShowDropdownTxTypes.bind(this, !showDropdownTxTypes)}
+                                filter={t(`options.leaderboard.profile.filters.${filter.toLowerCase()}`)}
+                            >
+                                <DropDownWrapper hidden={!showDropdownTxTypes}>
+                                    <DropDown>
+                                        {Object.keys(Filters).map((key) => (
+                                            <Text
+                                                className={`${
+                                                    filter === Filters[key as keyof typeof Filters] ? 'selected' : ''
+                                                } text-s lh32 pale-grey capitalize`}
+                                                onClick={() => setFilter(Filters[key as keyof typeof Filters])}
+                                                key={key}
+                                            >
+                                                {t(`options.leaderboard.profile.filters.${key.toLowerCase()}`)}
+                                            </Text>
+                                        ))}
+                                    </DropDown>
+                                </DropDownWrapper>
+                            </TransactionFilters>
+                            <SortByMobile
+                                onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
+                                filter={mapColumnWithLabel(filter, mobileSort)}
+                            >
+                                <DropDownWrapper
+                                    className="markets-mobile__sorting-dropdown"
+                                    hidden={!showDropdownSort}
+                                >
+                                    <DropDown>
+                                        {getSortableColumns(filter).map((column) => (
+                                            <Text
+                                                className={`${
+                                                    column.id === mobileSort ? 'selected' : ''
+                                                } text-s lh32 pale-grey capitalize`}
+                                                onClick={() => setMobileSort(column.id)}
+                                                key={column.id}
+                                            >
+                                                {column.label}
+                                            </Text>
+                                        ))}
+                                    </DropDown>
+                                </DropDownWrapper>
+                            </SortByMobile>
+                        </>
                     )}
                 </FilterWrapper>
             </FlexDivRow>
@@ -291,6 +392,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             isLoading={marketsQuery.isLoading}
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
+                            mobileSort={mobileSort}
                         />
                     )}
                     {filter === Filters.Mints && (
@@ -298,6 +400,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             marketsData={marketsData}
                             usersMints={extractedMintsProfileData}
                             sortByField={sortByField}
+                            mobileSort={mobileSort}
                         />
                     )}
 
@@ -307,6 +410,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             usersTrades={extractedTradesProfileData}
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
+                            mobileSort={mobileSort}
                         />
                     )}
 
@@ -316,6 +420,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             usersExercises={extractedExercisesProfileData}
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
+                            mobileSort={mobileSort}
                         />
                     )}
                     {filter === Filters.Redeemable && (
@@ -325,6 +430,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             userDisplay={walletAddress.toLowerCase() === displayAddress}
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
+                            mobileSort={mobileSort}
                         />
                     )}
                 </TableContainer>

@@ -33,6 +33,7 @@ type UserUnclaimedTableProps = {
     userDisplay: boolean;
     sortByField: any;
     sortByMarketHeading: any;
+    mobileSort: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
@@ -43,10 +44,13 @@ const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({
     userDisplay,
     sortByField,
     sortByMarketHeading,
+    mobileSort,
 }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
+
+    useEffect(() => (mobileSort !== 0 ? setOrderBy(mobileSort) : setOrderBy(DEFAULT_ORDER_BY)), [mobileSort]);
 
     useEffect(() => setPage(0), [orderBy, orderDirection]);
 

@@ -866,10 +866,7 @@
                         "sell": "Продать"
                     }
                 },
-                "transaction-details-mobile": "Пользователь:",
-                "test-789": "Этикетка 3",
-                "test-456": "Этикетка 2",
-                "test-123": "Тестовая этикетка"
+                "transaction-details-mobile": "Пользователь:"
             }
         },
         "swap": {

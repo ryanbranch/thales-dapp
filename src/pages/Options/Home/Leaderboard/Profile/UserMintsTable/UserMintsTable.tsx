@@ -33,13 +33,16 @@ type UserMintsTable = {
     usersMints: any[];
     marketsData: any[];
     sortByField: any;
+    mobileSort: any;
 };
 const DEFAULT_ORDER_BY = 1;
 
-const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData, sortByField }) => {
+const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData, sortByField, mobileSort }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
+
+    useEffect(() => (mobileSort !== 0 ? setOrderBy(mobileSort) : setOrderBy(DEFAULT_ORDER_BY)), [mobileSort]);
 
     useEffect(() => setPage(0), [orderBy, orderDirection]);
 

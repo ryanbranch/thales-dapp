@@ -866,10 +866,7 @@
                         "sell": "出售"
                     }
                 },
-                "transaction-details-mobile": "用户：",
-                "test-123": "测试标签",
-                "test-789": "测试标签 3",
-                "test-456": "测试标签 2"
+                "transaction-details-mobile": "用户："
             }
         },
         "common": {

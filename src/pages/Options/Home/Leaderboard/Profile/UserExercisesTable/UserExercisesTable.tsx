@@ -36,6 +36,7 @@ type UserExcersisesTableProps = {
     marketsData: any[];
     sortByField: any;
     sortByMarketHeading: any;
+    mobileSort: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
@@ -45,12 +46,15 @@ const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({
     marketsData,
     sortByField,
     sortByMarketHeading,
+    mobileSort,
 }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
 
     useEffect(() => setPage(0), [orderBy, orderDirection]);
+
+    useEffect(() => (mobileSort !== 0 ? setOrderBy(mobileSort) : setOrderBy(DEFAULT_ORDER_BY)), [mobileSort]);
 
     const [page, setPage] = useState(0);
     const handleChangePage = (_event: unknown, newPage: number) => {
