@@ -10,9 +10,11 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
+import { DropDown, DropDownWrapper } from '../../ExploreMarkets/Mobile/CategoryFilters';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import { marketHeading } from '../Trades/Trades';
 import './media.scss';
+import { TransactionFilters } from './Mobile/TransactionFilters';
 import UserAllTxTable from './UserAllTxTable';
 import UserExercisesTable from './UserExercisesTable';
 import UserMintsTable from './UserMintsTable';
@@ -20,11 +22,11 @@ import UserTradesTable from './UserTradesTable';
 import UserUnclaimedTable from './UserUnclaimedTable';
 
 export enum Filters {
+    All = 'all',
     Mints = 'mints',
     Trades = 'trades',
-    Excercises = 'excercises',
-    Unclaimed = 'unclaimed',
-    All = 'all',
+    Exercises = 'exercises',
+    Redeemable = 'redeemable',
 }
 
 export enum OrderDirection {
@@ -45,6 +47,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.All);
     const [displayAddress, setDisplayAddress] = useState<string>(walletAddress);
+    const [showDropdownTxTypes, setShowDropdownTxTypes] = useState(false);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: isAppReady,
@@ -159,16 +162,18 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
 
     return (
         <FlexDivColumnCentered className="leaderboard__profile">
-            <FlexDivRow style={{ flexDirection: 'row' }}>
-                <FlexDiv style={{ paddingLeft: 42 }}>
+            <FlexDivRow className="leaderboard__profile__search-wrap">
+                <FlexDiv className="leaderboard__profile__search-wrap__details">
                     <Text className="bold white" style={{ alignSelf: 'center' }}>
-                        {t('options.leaderboard.profile.transaction-details')}
+                        {window.screen.width > 1024
+                            ? t('options.leaderboard.profile.transaction-details')
+                            : t('options.leaderboard.profile.transaction-details-mobile')}
                     </Text>
                     <Text className="bold white" style={{ alignSelf: 'center', paddingLeft: 15 }}>
                         {displayAddress}
                     </Text>
                 </FlexDiv>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 450, margin: '22px 0' }}>
+                <SearchWrapper className="leaderboard__profile__search-wrap__search">
                     <SearchAutoCompleteInput
                         style={{ width: '100%' }}
                         className="leaderboard__search"
@@ -189,6 +194,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                                         paddingLeft: 0,
                                         background: 'transparent',
                                         margin: 0,
+                                        fontSize: window.screen.width <= 1024 ? 14 : '',
                                     }}
                                     {...params.inputProps}
                                 />
@@ -197,38 +203,75 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                     ></SearchAutoCompleteInput>
                 </SearchWrapper>
             </FlexDivRow>
-            <FlexDivRow style={{ flexDirection: 'row' }}>
-                <FilterWrapper>
+            <FlexDivRow className="leaderboard__profile__filter-wrap">
+                <FilterWrapper className="leaderboard__profile__filter-wrap__filters">
                     <FilterButton
-                        className={'leaderboard__profile__filter ' + (filter === Filters.All ? 'selected' : '')}
+                        className={
+                            'leaderboard__profile__filter-wrap__filters__filter ' +
+                            (filter === Filters.All ? 'selected' : '')
+                        }
                         onClick={() => setFilter(Filters.All)}
                     >
                         {t('options.leaderboard.profile.filters.all')}
                     </FilterButton>
                     <FilterButton
-                        className={'leaderboard__profile__filter ' + (filter === Filters.Mints ? 'selected' : '')}
+                        className={
+                            'leaderboard__profile__filter-wrap__filters__filter ' +
+                            (filter === Filters.Mints ? 'selected' : '')
+                        }
                         onClick={() => setFilter(Filters.Mints)}
                     >
                         {t('options.leaderboard.profile.filters.mints')}
                     </FilterButton>
                     <FilterButton
-                        className={'leaderboard__profile__filter ' + (filter === Filters.Trades ? 'selected' : '')}
+                        className={
+                            'leaderboard__profile__filter-wrap__filters__filter ' +
+                            (filter === Filters.Trades ? 'selected' : '')
+                        }
                         onClick={() => setFilter(Filters.Trades)}
                     >
                         {t('options.leaderboard.profile.filters.trades')}
                     </FilterButton>
                     <FilterButton
-                        className={'leaderboard__profile__filter ' + (filter === Filters.Excercises ? 'selected' : '')}
-                        onClick={() => setFilter(Filters.Excercises)}
+                        className={
+                            'leaderboard__profile__filter-wrap__filters__filter ' +
+                            (filter === Filters.Exercises ? 'selected' : '')
+                        }
+                        onClick={() => setFilter(Filters.Exercises)}
                     >
                         {t('options.leaderboard.profile.filters.exercises')}
                     </FilterButton>
                     <FilterButton
-                        className={'leaderboard__profile__filter ' + (filter === Filters.Unclaimed ? 'selected' : '')}
-                        onClick={() => setFilter(Filters.Unclaimed)}
+                        className={
+                            'leaderboard__profile__filter-wrap__filters__filter ' +
+                            (filter === Filters.Redeemable ? 'selected' : '')
+                        }
+                        onClick={() => setFilter(Filters.Redeemable)}
                     >
                         {t('options.leaderboard.profile.filters.redeemable')}
                     </FilterButton>
+                    {window.screen.width <= 1024 && (
+                        <TransactionFilters
+                            onClick={setShowDropdownTxTypes.bind(this, !showDropdownTxTypes)}
+                            filter={t(`options.leaderboard.profile.filters.${filter.toLowerCase()}`)}
+                        >
+                            <DropDownWrapper hidden={!showDropdownTxTypes}>
+                                <DropDown>
+                                    {Object.keys(Filters).map((key) => (
+                                        <Text
+                                            className={`${
+                                                filter === Filters[key as keyof typeof Filters] ? 'selected' : ''
+                                            } text-s lh32 pale-grey capitalize`}
+                                            onClick={() => setFilter(Filters[key as keyof typeof Filters])}
+                                            key={key}
+                                        >
+                                            {t(`options.leaderboard.profile.filters.${key.toLowerCase()}`)}
+                                        </Text>
+                                    ))}
+                                </DropDown>
+                            </DropDownWrapper>
+                        </TransactionFilters>
+                    )}
                 </FilterWrapper>
             </FlexDivRow>
             <DataWrapper>
@@ -267,7 +310,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                         />
                     )}
 
-                    {filter === Filters.Excercises && (
+                    {filter === Filters.Exercises && (
                         <UserExercisesTable
                             marketsData={marketsData}
                             usersExercises={extractedExercisesProfileData}
@@ -275,7 +318,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             sortByMarketHeading={sortByMarketHeading}
                         />
                     )}
-                    {filter === Filters.Unclaimed && (
+                    {filter === Filters.Redeemable && (
                         <UserUnclaimedTable
                             marketsData={marketsData}
                             usersUnclaimed={extractedUnclaimedProfileData}

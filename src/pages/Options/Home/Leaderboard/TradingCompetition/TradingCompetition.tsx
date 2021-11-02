@@ -252,8 +252,8 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 0' }}>
+            <FlexDivRow className="leaderboard__wrapper__content">
+                <SearchWrapper className="leaderboard__wrapper__content__search">
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"

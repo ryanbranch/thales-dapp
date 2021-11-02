@@ -1,0 +1,181 @@
+.user-info {
+    &__my-info {
+        background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
+        border-radius: 23px;
+        margin-bottom: 16px;
+        flex-direction: column !important;
+        height: 148px;
+        &__header {
+            border-top-left-radius: 23px;
+            border-top-right-radius: 23px;
+            height: 50px;
+            margin: 1px 1px 0 1px;
+            padding-left: 36px !important;
+            line-height: 40px !important;
+            letter-spacing: 0.15;
+            font-size: 20px;
+            padding-top: 8px !important;
+        }
+        &__display-name {
+            height: 48px;
+            padding-left: 36px !important;
+            line-height: 32px !important;
+            margin: 0 1px 0 1px;
+            letter-spacing: 0.35px;
+            padding-top: 26px !important;
+            font-weight: bold;
+            &__name {
+                flex: 1;
+                letter-spacing: 0.5px;
+                font-weight: 700;
+                font-size: 20px;
+            }
+            &__edit-icon {
+                width: 20px !important;
+                height: 20px !important;
+                margin-left: 20px !important;
+                cursor: pointer;
+            }
+        }
+        &__address {
+            border-bottom-left-radius: 23px;
+            border-bottom-right-radius: 23px;
+            height: 48px;
+            padding-left: 36px !important;
+            margin: 0 1px 0 1px;
+            line-height: 32px !important;
+            letter-spacing: 0.35px;
+            padding-top: 4px !important;
+            &__text {
+                font-weight: bold;
+                flex: 1;
+                letter-spacing: 0.5px;
+                &__wallet {
+                    font-size: 20px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    &__twitter-info {
+        background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
+        border-radius: 23px;
+        margin-bottom: 16px;
+        flex-direction: column;
+        height: 148px;
+        &__header {
+            border-top-left-radius: 23px;
+            border-top-right-radius: 23px;
+            height: 50px;
+            padding-left: 36px !important;
+            margin: 1px 1px 0 1px;
+            line-height: 40px;
+            letter-spacing: 0.15px;
+            font-size: 20px;
+            padding-top: 8px !important;
+        }
+        &__content {
+            border-bottom-left-radius: 23px;
+            border-bottom-right-radius: 23px;
+            padding-left: 36px;
+            margin: 0 1px 0 1px;
+            padding-right: 43px;
+            height: 96px;
+            &__verify-button {
+                width: 202px;
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .leaderboard-content-desktop {
+        display: none !important;
+    }
+
+    .leaderboard-title {
+        font-size: 31px !important;
+        line-height: 42px !important;
+    }
+
+    .leaderboard-description {
+        font-size: 14px !important;
+    }
+
+    .user-info {
+        &__my-info {
+            &__header {
+                padding-left: 16px !important;
+                padding-top: 16px !important;
+                font-size: 16px;
+                line-height: 24px !important;
+                padding-bottom: 0px !important;
+            }
+            &__display-name {
+                padding-left: 16px !important;
+                padding-top: 0px !important;
+                font-size: 14px !important;
+                line-height: 16px !important;
+                font-weight: 400 !important;
+                letter-spacing: 0.25px;
+                padding-bottom: 25px !important;
+                &__name {
+                    position: absolute;
+                    display: block;
+                    margin-top: 45px;
+                    font-size: 14px;
+                    line-height: 24px !important;
+                }
+                &__edit-icon {
+                    width: 15px !important;
+                    height: 15px !important;
+                    margin-left: 15px !important;
+                }
+            }
+            &__address {
+                padding-left: 16px !important;
+                font-size: 14px;
+                line-height: 16px !important;
+                font-weight: 400 !important;
+
+                &__text {
+                    font-weight: normal;
+                    letter-spacing: 0.25px;
+                    font-size: 14px;
+                    line-height: 16px !important;
+                    &__wallet {
+                        font-weight: bold;
+                        font-size: 14px;
+                        line-height: 24px;
+                    }
+                }
+            }
+        }
+
+        &__twitter-info {
+            &__header {
+                padding-left: 16px !important;
+                line-height: 24px;
+                font-size: 16px;
+                padding-top: 16px !important;
+            }
+            &__content {
+                padding-left: 16px !important;
+                padding-right: 24px !important;
+                &__verify-button {
+                    width: 150px;
+                    font-size: 16px;
+                    line-height: 24px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .leaderboard-content-mobile {
+        display: none !important;
+    }
+}

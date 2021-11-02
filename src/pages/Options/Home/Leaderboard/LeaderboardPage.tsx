@@ -27,6 +27,8 @@ import Trades from './Trades';
 import TradingCompetition from './TradingCompetition';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
+import './media.scss';
+import LeaderboardPageMobile from './LeaderboardPageMobile';
 
 const ethEnabled = () => {
     if (window.ethereum) {
@@ -193,34 +195,34 @@ const LeaderboardPage: React.FC = () => {
                     <div style={{ height: 356 }}>
                         <div style={{ height: 168 }}>
                             {selectedTab === 'leaderboard' && (
-                                <LeaderboardTitle className="pale-grey">
+                                <LeaderboardTitle className="pale-grey leaderboard-title">
                                     {t('options.leaderboard.leaderboard-title')}
                                 </LeaderboardTitle>
                             )}
                             {selectedTab === 'leaderboard' && (
                                 <>
-                                    <Text className="text-s ls25 lh24 pale-grey">
+                                    <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                         {t('options.leaderboard.leaderboard-subtitle')}
                                     </Text>
-                                    <Text className="text-s ls25 lh24 pale-grey">
+                                    <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                         {t('options.leaderboard.leaderboard-subtitle-2')}
                                     </Text>
                                 </>
                             )}
                             {selectedTab === 'trading-competition' && (
-                                <LeaderboardTitle className="pale-grey">
+                                <LeaderboardTitle className="pale-grey leaderboard-title">
                                     {t('options.leaderboard.trading-comp-title')}
                                 </LeaderboardTitle>
                             )}
                             {selectedTab === 'trading-competition' && (
                                 <>
-                                    <Text className="text-s ls25 lh24 pale-grey">
+                                    <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                         {t('options.leaderboard.trading-comp-subtitle')}
                                     </Text>
-                                    <Text className="text-s ls25 lh24 pale-grey">
+                                    <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                         {t('options.leaderboard.trading-comp-subtitle-2')}
                                     </Text>
-                                    <Text className="text-s ls25 lh24 pale-grey">
+                                    <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                         <StyledLink
                                             href={buildHref(ROUTES.Options.CompetitionMarkets)}
                                             rel="noreferrer"
@@ -229,7 +231,7 @@ const LeaderboardPage: React.FC = () => {
                                             {t('options.leaderboard.trading-comp-subtitle-3')}
                                         </StyledLink>
                                     </Text>
-                                    <Text className="text-s ls25 lh24 pale-grey">
+                                    <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                         {t('options.leaderboard.trading-comp-subtitle-4')}
                                         <StyledLink
                                             href="https://docs.thales.market/using-thales/guide-for-thales-first-trading-competition"
@@ -242,74 +244,43 @@ const LeaderboardPage: React.FC = () => {
                                 </>
                             )}
                             {selectedTab === 'profile' && (
-                                <LeaderboardTitle className="pale-grey">
+                                <LeaderboardTitle className="pale-grey leaderboard-title">
                                     {t('options.leaderboard.profile-title')}
                                 </LeaderboardTitle>
                             )}
                             {selectedTab === 'profile' && (
-                                <Text className="text-s ls25 lh24 pale-grey">
+                                <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                     {t('options.leaderboard.profile-subtitle')}
                                 </Text>
                             )}
                             {selectedTab === 'trades' && (
                                 <>
-                                    <LeaderboardTitle className="pale-grey">
+                                    <LeaderboardTitle className="pale-grey leaderboard-title">
                                         {t('options.leaderboard.trades-title')}
                                     </LeaderboardTitle>
-                                    <Text className="text-s ls25 lh24 pale-grey">
+                                    <Text className="text-s ls25 lh24 pale-grey leaderboard-description">
                                         {t('options.leaderboard.trades-subtitle')}
                                     </Text>
                                 </>
                             )}
                         </div>
-                        <InfoContainer>
-                            <FlexDiv
-                                style={{
-                                    background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
-                                    borderRadius: 23,
-                                    marginBottom: 16,
-                                    flexDirection: 'column',
-                                    height: 148,
-                                }}
-                            >
-                                <Row
-                                    style={{
-                                        borderTopLeftRadius: 23,
-                                        borderTopRightRadius: 23,
-                                        height: 50,
-                                        margin: '1px 1px 0 1px',
-                                        paddingLeft: 36,
-                                        lineHeight: 40,
-                                        letterSpacing: 0.15,
-                                        fontSize: 20,
-                                        paddingTop: 8,
-                                    }}
-                                >
+                        <InfoContainer className="user-info">
+                            <FlexDiv className="user-info__my-info">
+                                <Row className="user-info__my-info__header">
                                     <Text className="bold lh24" style={{ flex: 1 }}>
-                                        {t('options.leaderboard.my-info')}:
+                                        {t('options.leaderboard.my-info')}
                                     </Text>
                                 </Row>
-                                <Row
-                                    style={{
-                                        height: 48,
-                                        paddingLeft: 36,
-                                        lineHeight: 32,
-                                        margin: '0 1px 0 1px',
-                                        letterSpacing: 0.35,
-                                        paddingTop: 26,
-                                    }}
-                                >
-                                    <Text className="bold lh24" style={{ marginRight: 4 }}>
+                                <Row className="user-info__my-info__display-name">
+                                    <Text className="lh24" style={{ marginRight: 4 }}>
                                         {t('options.leaderboard.display-name')}:{' '}
                                     </Text>
 
                                     {!editMode && (
-                                        <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
-                                            <span style={{ fontSize: 20, fontWeight: 700 }}>
-                                                {displayNamesMap.get(walletAddress.toLowerCase().trim())}
-                                            </span>
+                                        <Text className="lh24 user-info__my-info__display-name__name">
+                                            <span>{displayNamesMap.get(walletAddress.toLowerCase().trim())}</span>
                                             <Image
-                                                style={{ width: 20, height: 20, marginLeft: 20, cursor: 'pointer' }}
+                                                className="user-info__my-info__display-name__edit-icon"
                                                 onClick={() => {
                                                     setEditMode(true);
                                                 }}
@@ -347,60 +318,22 @@ const LeaderboardPage: React.FC = () => {
                                     )}
                                 </Row>
 
-                                <Row
-                                    style={{
-                                        borderBottomLeftRadius: 23,
-                                        borderBottomRightRadius: 23,
-                                        height: 48,
-                                        paddingLeft: 36,
-                                        margin: '0 1px 0 1px',
-                                        lineHeight: 32,
-                                        letterSpacing: 0.35,
-                                        paddingTop: 4,
-                                    }}
-                                >
-                                    <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                <Row className="user-info__my-info__address">
+                                    <Text className="lh24 user-info__my-info__address__text">
                                         {t('options.leaderboard.address')}:{' '}
-                                        <span style={{ fontSize: 20, fontWeight: 700 }}>{walletAddress}</span>
+                                        <span className="lh24 user-info__my-info__address__text__wallet">
+                                            {walletAddress}
+                                        </span>
                                     </Text>
                                 </Row>
                             </FlexDiv>
-                            <FlexDiv
-                                style={{
-                                    background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
-                                    borderRadius: 23,
-                                    marginBottom: 16,
-                                    flexDirection: 'column',
-                                    height: 148,
-                                }}
-                            >
-                                <Row
-                                    style={{
-                                        borderTopLeftRadius: 23,
-                                        borderTopRightRadius: 23,
-                                        height: 50,
-                                        paddingLeft: 36,
-                                        margin: '1px 1px 0 1px',
-                                        lineHeight: 40,
-                                        letterSpacing: 0.15,
-                                        fontSize: 20,
-                                        paddingTop: 8,
-                                    }}
-                                >
+                            <FlexDiv className="user-info__twitter-info">
+                                <Row className="user-info__twitter-info__header">
                                     <Text className="bold lh24" style={{ flex: 1 }}>
                                         {t('options.leaderboard.twitter-account')}
                                     </Text>
                                 </Row>
-                                <Row
-                                    style={{
-                                        borderBottomLeftRadius: 23,
-                                        borderBottomRightRadius: 23,
-                                        paddingLeft: 36,
-                                        margin: '0 1px 0 1px',
-                                        paddingRight: 43,
-                                        height: 96,
-                                    }}
-                                >
+                                <Row className="user-info__twitter-info__content">
                                     {walletAddress && !accVerified && (
                                         <Image src={twitter} style={{ height: 50, width: 50 }}></Image>
                                     )}
@@ -422,8 +355,7 @@ const LeaderboardPage: React.FC = () => {
                                     )}
                                     {walletAddress && !accVerified && (
                                         <Button
-                                            className="primary"
-                                            style={{ width: 202, fontSize: 20 }}
+                                            className="primary user-info__twitter-info__content__verify-button"
                                             onClick={checkAddress}
                                         >
                                             {t('options.leaderboard.verify')}
@@ -433,7 +365,12 @@ const LeaderboardPage: React.FC = () => {
                             </FlexDiv>
                         </InfoContainer>
                     </div>
-                    <MainContentContainer>
+                    <LeaderboardPageMobile
+                        selectedTab={selectedTab}
+                        setSelectedTab={setSelectedTab}
+                        displayNamesMap={displayNamesMap}
+                    ></LeaderboardPageMobile>
+                    <MainContentContainer className="leaderboard-content-desktop">
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (
                                 <OptionsTab

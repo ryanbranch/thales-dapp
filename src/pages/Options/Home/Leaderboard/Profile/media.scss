@@ -5,9 +5,27 @@
         width: 100%;
         grid-column: 1/-1;
 
-        &__filter {
-            width: auto;
-            margin: 24px 10px 16px 0px !important;
+        &__search-wrap {
+            flex-direction: row;
+            &__details {
+                padding-left: 42px;
+            }
+            &__search {
+                align-self: flex-start;
+                flex: 1;
+                max-width: 450px;
+                margin: 22px 0 !important;
+            }
+        }
+
+        &__filter-wrap {
+            flex-direction: row;
+            &__filters {
+                &__filter {
+                    width: auto;
+                    margin: 24px 10px 16px 0px !important;
+                }
+            }
         }
 
         &__rowBorder {
@@ -56,4 +74,30 @@
 .text-profile-data {
     font-size: 16px;
     letter-spacing: 0.5px;
+}
+
+@media screen and (max-width: 1024px) {
+    .leaderboard {
+        &__profile {
+            &__search-wrap {
+                &__details {
+                    padding-left: 0;
+                    font-size: 14px;
+                }
+                &__search {
+                    margin: 22px 0 22px 25px !important;
+                }
+            }
+
+            &__filter-wrap {
+                flex-direction: row;
+                &__filters {
+                    padding-left: 0px !important;
+                    &__filter {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
 }

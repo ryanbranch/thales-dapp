@@ -820,6 +820,7 @@
                 "tab-title": "Profile",
                 "search-placeholder": "Search other profiles by typing display name",
                 "transaction-details": "Transaction details for user:",
+                "transaction-details-mobile": "User:",
                 "no-transactions": "No transactions available",
                 "go-to-redeem": "Click to redeem",
                 "filters": {
