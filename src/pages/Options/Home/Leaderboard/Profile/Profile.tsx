@@ -51,14 +51,31 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const [showDropdownTxTypes, setShowDropdownTxTypes] = useState(false);
     const [showDropdownSort, setShowDropdownSort] = useState(false);
     const [mobileSort, setMobileSort] = useState(0);
+    const [isMobileView, setIsMobileView] = useState(false);
 
     useEffect(() => {
-        window.screen.width <= 1024 ? setMobileSort(1) : '';
+        window.innerWidth <= 900 ? setMobileSort(1) : '';
     }, [filter]);
 
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: isAppReady,
     });
+
+    const handleResize = () => {
+        if (window.innerWidth <= 900) {
+            setIsMobileView(true);
+        } else {
+            setIsMobileView(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const marketsData = useMemo(() => (marketsQuery.data ? marketsQuery.data : []), [marketsQuery]);
 
@@ -241,12 +258,12 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
             <FlexDivRow className="leaderboard__profile__search-wrap">
                 <FlexDiv className="leaderboard__profile__search-wrap__details">
                     <Text className="bold white" style={{ alignSelf: 'center' }}>
-                        {window.screen.width > 1024
+                        {!isMobileView
                             ? t('options.leaderboard.profile.transaction-details')
                             : t('options.leaderboard.profile.transaction-details-mobile')}
                     </Text>
                     <Text className="bold white" style={{ alignSelf: 'center', paddingLeft: 15 }}>
-                        {displayAddress}
+                        {displayAddress ? displayAddress : walletAddress}
                     </Text>
                 </FlexDiv>
                 <SearchWrapper className="leaderboard__profile__search-wrap__search">
@@ -270,7 +287,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                                         paddingLeft: 0,
                                         background: 'transparent',
                                         margin: 0,
-                                        fontSize: window.screen.width <= 1024 ? 14 : '',
+                                        fontSize: isMobileView ? 14 : '',
                                     }}
                                     {...params.inputProps}
                                 />
@@ -326,7 +343,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                     >
                         {t('options.leaderboard.profile.filters.redeemable')}
                     </FilterButton>
-                    {window.screen.width <= 1024 && (
+                    {isMobileView && (
                         <>
                             <TransactionFilters
                                 onClick={setShowDropdownTxTypes.bind(this, !showDropdownTxTypes)}
@@ -393,6 +410,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
                             mobileSort={mobileSort}
+                            isMobileView={isMobileView}
                         />
                     )}
                     {filter === Filters.Mints && (
@@ -401,6 +419,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             usersMints={extractedMintsProfileData}
                             sortByField={sortByField}
                             mobileSort={mobileSort}
+                            isMobileView={isMobileView}
                         />
                     )}
 
@@ -411,6 +430,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
                             mobileSort={mobileSort}
+                            isMobileView={isMobileView}
                         />
                     )}
 
@@ -421,6 +441,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
                             mobileSort={mobileSort}
+                            isMobileView={isMobileView}
                         />
                     )}
                     {filter === Filters.Redeemable && (
@@ -431,6 +452,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             sortByField={sortByField}
                             sortByMarketHeading={sortByMarketHeading}
                             mobileSort={mobileSort}
+                            isMobileView={isMobileView}
                         />
                     )}
                 </TableContainer>

@@ -37,6 +37,7 @@ type UserExcersisesTableProps = {
     sortByField: any;
     sortByMarketHeading: any;
     mobileSort: any;
+    isMobileView: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
@@ -47,6 +48,7 @@ const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({
     sortByField,
     sortByMarketHeading,
     mobileSort,
+    isMobileView,
 }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
@@ -148,7 +150,7 @@ const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({
                                         >
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        {cell.sortable && (
+                                        {cell.sortable && !isMobileView && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow

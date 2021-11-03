@@ -17,6 +17,9 @@ import SearchMarket from '../../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import Checkbox from 'components/Checkbox';
+import { SortByMobile } from '../Profile/Mobile/SortByMobile';
+import { DropDown, DropDownWrapper } from '../../ExploreMarkets/Mobile/CategoryFilters';
+import { HeadCell } from '../Profile/Profile';
 
 enum OrderDirection {
     NONE,
@@ -35,11 +38,29 @@ const Trades: React.FC = () => {
     const [assetSearch, setAssetSearch] = useState<string>('');
     const [volume, setVolume] = useState<number>(0);
     const [showOnlyTradingCompetition, setShowOnlyTradingCompetition] = useState<boolean>(true);
+    const [isMobileView, setIsMobileView] = useState(false);
+    const [showDropdownSort, setShowDropdownSort] = useState(false);
 
     const tradesQuery = useBinaryOptionsAllTradesQuery(networkId, {
         enabled: isAppReady,
     });
     const trades: ExtendedTrade[] = tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : [];
+
+    const handleResize = () => {
+        if (window.innerWidth <= 900) {
+            setIsMobileView(true);
+        } else {
+            setIsMobileView(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const filteredTrades = useMemo(() => {
         let filteredTrades = trades;
@@ -106,10 +127,23 @@ const Trades: React.FC = () => {
         setAssetSearch('');
     };
 
+    const sortableColumns: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.trades.table.type-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.trades.table.price-col'), sortable: true },
+    ];
+
+    const mapColumnWithLabel = (columnId: any) => {
+        return sortableColumns.find((column) => column.id === columnId)?.label;
+    };
+
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow>
-                <CheckboxContainer>
+                <CheckboxContainer isMobileView={isMobileView}>
                     <Checkbox
                         checked={showOnlyTradingCompetition}
                         value={showOnlyTradingCompetition.toString()}
@@ -120,17 +154,42 @@ const Trades: React.FC = () => {
                 <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
             </FlexDivRow>
             <InfoContainer>
-                <Info>
+                <Info isMobileView={isMobileView}>
                     {`${t('options.leaderboard.trades.number-of-trades')}: ${
                         tradesQuery.isLoading ? '-' : searchFilteredTrades.length
                     }`}
                 </Info>
-                <Info>
+                <Info isMobileView={isMobileView}>
                     {`${t('options.leaderboard.trades.volume')}: ${
                         tradesQuery.isLoading ? '-' : formatCurrencyWithSign(USD_SIGN, volume)
                     }`}
                 </Info>
+                {isMobileView && (
+                    <div style={{ display: 'inline-block', width: '50%', marginLeft: 15 }}>
+                        <SortByMobile
+                            onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
+                            filter={mapColumnWithLabel(orderBy)}
+                        >
+                            <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
+                                <DropDown>
+                                    {sortableColumns.map((column) => (
+                                        <Text
+                                            className={`${
+                                                column.id === orderBy ? 'selected' : ''
+                                            } text-s lh32 pale-grey capitalize`}
+                                            onClick={() => setOrderBy(column.id)}
+                                            key={column.id}
+                                        >
+                                            {column.label}
+                                        </Text>
+                                    ))}
+                                </DropDown>
+                            </DropDownWrapper>
+                        </SortByMobile>
+                    </div>
+                )}
             </InfoContainer>
+
             <TradesTable
                 trades={assetSearch ? searchFilteredTrades : filteredTrades}
                 isLoading={tradesQuery.isLoading}
@@ -138,6 +197,7 @@ const Trades: React.FC = () => {
                 orderDirection={orderDirection}
                 setOrderBy={setOrderBy}
                 setOrderDirection={setOrderDirection}
+                isMobileView={isMobileView}
             >
                 <NoTrades>
                     <>
@@ -250,9 +310,9 @@ const InfoContainer = styled.div`
     margin-bottom: 20px;
 `;
 
-const Info = styled.span`
+const Info = styled.span<{ isMobileView: boolean }>`
     font-weight: bold;
-    font-size: 18px;
+    font-size: ${(props) => (props.isMobileView ? 14 + 'px ' : 18 + 'px ')};
     line-height: 24px;
     color: #f6f6fe;
     &:first-child {
@@ -260,12 +320,12 @@ const Info = styled.span`
     }
 `;
 
-export const CheckboxContainer = styled.div`
+export const CheckboxContainer = styled.div<{ isMobileView: boolean }>`
     padding-top: 4px;
     margin-top: 21px;
     margin-left: 22px;
     label {
-        font-size: 16px;
+        font-size: ${(props) => (props.isMobileView ? 14 + 'px ' : 16 + 'px ')};
     }
     span {
         :after {

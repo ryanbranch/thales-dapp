@@ -53,6 +53,7 @@ type TradesTableProps = {
     setOrderBy: (data: any) => void;
     orderDirection: OrderDirection;
     setOrderDirection: (data: any) => void;
+    isMobileView: boolean;
 };
 
 const TradesTable: React.FC<TradesTableProps> = ({
@@ -63,6 +64,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
     setOrderBy,
     setOrderDirection,
     children,
+    isMobileView,
 }) => {
     const { t } = useTranslation();
 
@@ -144,7 +146,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
                                             >
                                                 {cell.label}
                                             </TableHeaderLabel>
-                                            {cell.sortable && (
+                                            {cell.sortable && !isMobileView && (
                                                 <ArrowsWrapper>
                                                     {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                         <Arrow

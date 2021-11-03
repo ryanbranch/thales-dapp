@@ -76,7 +76,7 @@
     letter-spacing: 0.5px;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 900px) {
     .leaderboard {
         &__profile {
             &__search-wrap {
@@ -85,8 +85,8 @@
                     font-size: 14px;
                 }
                 &__search {
-                    margin: 22px 0 22px 25px !important;
-                    max-width: 45%;
+                    margin: 22px 0 22px 38px !important;
+                    max-width: 381px;
                 }
             }
 
@@ -94,7 +94,8 @@
                 flex-direction: row;
                 &__filters {
                     padding-left: 0px !important;
-                    width: 45%;
+                    padding-right: 0px !important;
+                    width: 100%;
                     &__filter {
                         display: none;
                     }

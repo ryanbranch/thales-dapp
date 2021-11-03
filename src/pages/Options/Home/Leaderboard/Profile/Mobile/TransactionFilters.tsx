@@ -11,6 +11,7 @@ export const SearchWrapper = styled(FlexDiv)`
     background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
     border-radius: 23px;
     margin-bottom: 22px;
+    margin-right: 20px;
     &:before {
         content: url(${arrowDown});
         position: absolute;

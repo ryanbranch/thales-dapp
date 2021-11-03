@@ -9,8 +9,9 @@ const SortWrapper = styled(FlexDiv)`
     width: 100%;
     align-items: center;
     position: relative;
-    border-bottom: 2px solid #f6f6fa;
-    margin-right: 14px;
+    border-bottom: 1px solid #f6f6fa;
+    margin-bottom: 22px;
+    margin-left: 20px;
     &:before {
         content: url(${arrowDown});
         position: absolute;
@@ -32,7 +33,7 @@ const TextWrapper = styled.p`
     letter-spacing: 0.15px;
     color: #f6f6fe;
     padding-left: 20px;
-    margin: 2px;
+    margin: 1px;
     &::placeholder {
         font-size: 16px;
         color: #f6f6f6;

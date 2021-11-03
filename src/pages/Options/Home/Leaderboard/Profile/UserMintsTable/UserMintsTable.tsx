@@ -34,10 +34,17 @@ type UserMintsTable = {
     marketsData: any[];
     sortByField: any;
     mobileSort: any;
+    isMobileView: any;
 };
 const DEFAULT_ORDER_BY = 1;
 
-const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData, sortByField, mobileSort }) => {
+const UserMintsTable: React.FC<UserMintsTable> = ({
+    usersMints,
+    marketsData,
+    sortByField,
+    mobileSort,
+    isMobileView,
+}) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -134,7 +141,7 @@ const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData, sor
                                         >
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        {cell.sortable && (
+                                        {cell.sortable && !isMobileView && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow

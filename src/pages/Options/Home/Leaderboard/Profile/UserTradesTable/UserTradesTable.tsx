@@ -37,6 +37,7 @@ type UserTradesTableProps = {
     sortByField: any;
     sortByMarketHeading: any;
     mobileSort: any;
+    isMobileView: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
@@ -47,6 +48,7 @@ const UserTradesTable: React.FC<UserTradesTableProps> = ({
     sortByField,
     sortByMarketHeading,
     mobileSort,
+    isMobileView,
 }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
@@ -156,7 +158,7 @@ const UserTradesTable: React.FC<UserTradesTableProps> = ({
                                         >
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        {cell.sortable && (
+                                        {cell.sortable && !isMobileView && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow
