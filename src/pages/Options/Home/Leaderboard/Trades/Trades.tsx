@@ -17,7 +17,7 @@ import SearchMarket from '../../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import Checkbox from 'components/Checkbox';
-import { SortByMobile } from '../Profile/Mobile/SortByMobile';
+import { SortByMobile } from '../Mobile/SortByMobile';
 import { DropDown, DropDownWrapper } from '../../ExploreMarkets/Mobile/CategoryFilters';
 import { HeadCell } from '../Profile/Profile';
 

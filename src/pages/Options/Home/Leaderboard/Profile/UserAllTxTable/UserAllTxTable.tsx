@@ -32,6 +32,8 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
 import { HeadCell, OrderDirection } from '../Profile';
+import '../media.scss';
+
 type UserAllTxTableProps = {
     profile: any;
     usersMints: any[];
@@ -225,7 +227,10 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
         <>
             {!isLoading && sortedTransactions.length > 0 && (
                 <Table aria-label="customized table">
-                    <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                    <TableHead
+                        className="leaderboard__profile__header"
+                        style={{ textTransform: 'uppercase', background: '#04045a' }}
+                    >
                         <TableRow>
                             {headCells.map((cell: HeadCell, index) => {
                                 return (

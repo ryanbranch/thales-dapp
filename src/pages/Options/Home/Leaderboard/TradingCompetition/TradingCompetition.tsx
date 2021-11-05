@@ -14,6 +14,7 @@ import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
 import gold from 'assets/images/gold.svg';
 import silver from 'assets/images/silver.svg';
+import twitter from 'assets/images/twitter-blue-logo.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -25,7 +26,7 @@ import {
     TooltipWarningIcon,
 } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
-import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
+import useCompetitionQuery from 'queries/options/useCompetitionQuery';
 import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,15 +34,16 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
+import { FlexDiv, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { DropDown, DropDownWrapper } from '../../ExploreMarkets/Mobile/CategoryFilters';
 import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
 import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
+import { SortByMobile } from '../Mobile/SortByMobile';
 import './media.scss';
-import twitter from 'assets/images/twitter-blue-logo.svg';
 
 enum OrderDirection {
     NONE,
@@ -63,6 +65,8 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [twitterAccountsData, setTwitterAccountsData] = useState([] as any);
+    const [isMobileView, setIsMobileView] = useState(false);
+    const [showDropdownSort, setShowDropdownSort] = useState(false);
 
     useEffect(() => {
         const url = 'https://api.thales.market/twitter/';
@@ -70,6 +74,22 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
             const result = JSON.parse(await response.text());
             setTwitterAccountsData(result);
         });
+    }, []);
+
+    const handleResize = () => {
+        if (window.innerWidth <= 900) {
+            setIsMobileView(true);
+        } else {
+            setIsMobileView(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
 
     const competitionQuery = useCompetitionQuery(networkId, {
@@ -250,18 +270,52 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         { id: 9, label: t('options.leaderboard.table.investment-col'), sortable: false },
     ];
 
+    const mapColumnWithLabel = (columnId: any) => {
+        return headCells.filter((column) => column.sortable).find((column) => column.id === columnId)?.label;
+    };
+
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow className="leaderboard__wrapper__content">
-                <SearchWrapper className="leaderboard__wrapper__content__search">
-                    <SearchInput
-                        style={{ width: '100%', paddingRight: 40 }}
-                        className="leaderboard__search"
-                        onChange={(e) => setSearchString(e.target.value)}
-                        value={searchString}
-                        placeholder={t('options.leaderboard.display-name')}
-                    ></SearchInput>
-                </SearchWrapper>
+                <FlexDiv>
+                    {isMobileView && (
+                        <div style={{ width: '47%', marginRight: 20, marginLeft: -20, marginTop: 22 }}>
+                            <SortByMobile
+                                onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
+                                filter={mapColumnWithLabel(orderBy)}
+                            >
+                                <DropDownWrapper
+                                    className="markets-mobile__sorting-dropdown"
+                                    hidden={!showDropdownSort}
+                                >
+                                    <DropDown>
+                                        {headCells.map((column) => (
+                                            <Text
+                                                className={`${
+                                                    column.id === orderBy ? 'selected' : ''
+                                                } text-s lh32 pale-grey capitalize`}
+                                                onClick={() => setOrderBy(column.id)}
+                                                key={column.id}
+                                            >
+                                                {column.label}
+                                            </Text>
+                                        ))}
+                                    </DropDown>
+                                </DropDownWrapper>
+                            </SortByMobile>
+                        </div>
+                    )}
+                    <SearchWrapper className="leaderboard__wrapper__content__search">
+                        <SearchInput
+                            style={{ width: '100%', paddingRight: 40 }}
+                            className="leaderboard__search"
+                            onChange={(e) => setSearchString(e.target.value)}
+                            value={searchString}
+                            placeholder={t('options.leaderboard.display-name')}
+                        ></SearchInput>
+                    </SearchWrapper>
+                </FlexDiv>
+
                 <Text
                     className="text-s ls25 lh24 pale-grey"
                     style={{ alignItems: 'center', flex: 1, height: 44, display: 'flex', columnGap: 2.5 }}
@@ -648,7 +702,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
 };
 
 interface HeadCell {
-    id: keyof Competition[];
+    id: number;
     label: string;
     sortable: boolean;
 }

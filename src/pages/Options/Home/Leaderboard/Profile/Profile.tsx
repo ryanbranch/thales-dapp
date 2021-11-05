@@ -14,8 +14,8 @@ import { DropDown, DropDownWrapper } from '../../ExploreMarkets/Mobile/CategoryF
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import { marketHeading } from '../Trades/Trades';
 import './media.scss';
-import { SortByMobile } from './Mobile/SortByMobile';
-import { TransactionFilters } from './Mobile/TransactionFilters';
+import { SortByMobile } from '../Mobile/SortByMobile';
+import { TransactionFilters } from '../Mobile/TransactionFilters';
 import UserAllTxTable from './UserAllTxTable';
 import UserExercisesTable from './UserExercisesTable';
 import UserMintsTable from './UserMintsTable';
@@ -245,7 +245,6 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
         { id: 4, label: t('options.leaderboard.trades.table.type-col'), sortable: true },
         { id: 5, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
         { id: 6, label: t('options.leaderboard.trades.table.price-col'), sortable: true },
-        { id: 7, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
     ];
     const sortableColumnsRedeemable: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.trades.table.market-col'), sortable: true },

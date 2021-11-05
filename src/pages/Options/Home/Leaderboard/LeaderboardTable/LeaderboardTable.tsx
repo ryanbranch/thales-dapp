@@ -16,20 +16,22 @@ import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
 import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
-import useLeaderboardQuery, { Leaderboard } from 'queries/options/useLeaderboardQuery';
-import React, { useMemo, useState } from 'react';
+import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { DropDown, DropDownWrapper } from '../../ExploreMarkets/Mobile/CategoryFilters';
 import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
 import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
+import { SortByMobile } from '../Mobile/SortByMobile';
 import './media.scss';
 
 enum OrderDirection {
@@ -49,6 +51,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [isMobileView, setIsMobileView] = useState(false);
+    const [showDropdownSort, setShowDropdownSort] = useState(false);
 
     const leaderboardQuery = useLeaderboardQuery(networkId, {
         enabled: isAppReady,
@@ -57,6 +61,22 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     const leaderboard = leaderboardQuery.data?.leaderboard
         ? leaderboardQuery.data.leaderboard.sort((a, b) => b.netProfit - a.netProfit)
         : [];
+
+    const handleResize = () => {
+        if (window.innerWidth <= 900) {
+            setIsMobileView(true);
+        } else {
+            setIsMobileView(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
@@ -192,10 +212,14 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
         { id: 7, label: t('options.leaderboard.table.gain-col'), sortable: true },
     ];
 
+    const mapColumnWithLabel = (columnId: any) => {
+        return headCells.filter((column) => column.sortable).find((column) => column.id === columnId)?.label;
+    };
+
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 0' }}>
+                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 45px' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
@@ -204,6 +228,30 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                         placeholder={t('options.leaderboard.display-name')}
                     ></SearchInput>
                 </SearchWrapper>
+                {isMobileView && (
+                    <div style={{ width: '47%', marginRight: 20, marginLeft: -20 }}>
+                        <SortByMobile
+                            onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
+                            filter={mapColumnWithLabel(orderBy)}
+                        >
+                            <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
+                                <DropDown>
+                                    {headCells.map((column) => (
+                                        <Text
+                                            className={`${
+                                                column.id === orderBy ? 'selected' : ''
+                                            } text-s lh32 pale-grey capitalize`}
+                                            onClick={() => setOrderBy(column.id)}
+                                            key={column.id}
+                                        >
+                                            {column.label}
+                                        </Text>
+                                    ))}
+                                </DropDown>
+                            </DropDownWrapper>
+                        </SortByMobile>
+                    </div>
+                )}
             </FlexDivRow>
 
             <TableContainer
@@ -249,7 +297,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                                             )}
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        {cell.sortable && (
+                                        {cell.sortable && !isMobileView && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow
@@ -384,7 +432,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
 };
 
 interface HeadCell {
-    id: keyof Leaderboard[];
+    id: number;
     label: string;
     sortable: boolean;
 }
