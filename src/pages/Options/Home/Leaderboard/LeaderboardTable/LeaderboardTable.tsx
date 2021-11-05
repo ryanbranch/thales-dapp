@@ -218,8 +218,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 45px' }}>
+            <FlexDivRow className="leaderboard__wrapper__content" style={{ flexDirection: 'row-reverse' }}>
+                <SearchWrapper className="leaderboard__wrapper__content__search">
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"

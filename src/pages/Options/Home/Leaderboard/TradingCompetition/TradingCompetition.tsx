@@ -275,8 +275,8 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     };
 
     return (
-        <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow className="leaderboard__wrapper__content">
+        <FlexDivColumnCentered className="competition__wrapper">
+            <FlexDivRow className="competition__wrapper__content">
                 <FlexDiv>
                     {isMobileView && (
                         <div style={{ width: '47%', marginRight: 20, marginLeft: -20, marginTop: 22 }}>
@@ -305,10 +305,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             </SortByMobile>
                         </div>
                     )}
-                    <SearchWrapper className="leaderboard__wrapper__content__search">
+                    <SearchWrapper className="competition__wrapper__content__search">
                         <SearchInput
                             style={{ width: '100%', paddingRight: 40 }}
-                            className="leaderboard__search"
+                            className="competition__search"
                             onChange={(e) => setSearchString(e.target.value)}
                             value={searchString}
                             placeholder={t('options.leaderboard.display-name')}
@@ -327,7 +327,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
 
             <TableContainer style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }} component={Paper}>
                 <Table
-                    className="leaderboard__table"
+                    className="competition__table"
                     aria-label="customized table"
                     style={{
                         borderCollapse: 'separate',
@@ -335,7 +335,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                     }}
                 >
                     <TableHead
-                        className="leaderboard__columns"
+                        className="competition__columns"
                         style={{ textTransform: 'uppercase', fontSize: 14, whiteSpace: 'nowrap' }}
                     >
                         <TableRow>
@@ -351,7 +351,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                             ${
                                                                 cell.sortable && orderBy === cell.id ? 'selected' : ''
                                                             }  ${
-                                                cell.id === 5 ? 'leaderboard__columns__net-profit' : ''
+                                                cell.id === 5 ? 'competition__columns__net-profit' : ''
                                             }`}
                                         >
                                             {cell.id === 5 && (
@@ -385,10 +385,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             })}
                         </TableRow>
                     </TableHead>
-                    <TableBody className="leaderboard__tableBody">
+                    <TableBody className="competition__tableBody">
                         {/* {filteredTwitterData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
                             .length === 0 && ( // will be changed upon start of trading competition when everything is uncommented
-                            <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
+                            <StyledTableRow className="competition__tableBody__yourRank"></StyledTableRow>
                         )}
                         {filteredTwitterData.map((data: any, index: any) => {
                             return (
@@ -437,7 +437,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     style={{
                                         opacity: cheater ? 0.3 : unverified ? 0.5 : 1,
                                     }}
-                                    className="leaderboard__tableBody__yourRank"
+                                    className="competition__tableBody__yourRank"
                                     key={index}
                                 >
                                     <StyledTableCell
@@ -528,7 +528,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             );
                         })}
                         {userLeaderboardData.length === 0 && (
-                            <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
+                            <StyledTableRow className="competition__tableBody__yourRank"></StyledTableRow>
                         )}
                         {leaderboardData.map((leader: any, index: any) => {
                             const twitterData = twitterAccountsData.filter(
@@ -544,9 +544,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     }}
                                     className={
                                         leader.rank === 1
-                                            ? 'leaderboard__tableBody__firstRank'
+                                            ? 'competition__tableBody__firstRank'
                                             : cheater
-                                            ? 'leaderboard__tableBody__cheater'
+                                            ? 'competition__tableBody__cheater'
                                             : ''
                                     }
                                 >

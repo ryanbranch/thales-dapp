@@ -4,6 +4,25 @@
         margin: 0 auto;
         width: 100%;
         grid-column: 1/-1;
+        &__content {
+            flex-direction: row-reverse;
+            &__search {
+                align-self: flex-start;
+                flex: 1;
+                max-width: 400px;
+                margin: 0 0 22px 0 !important;
+            }
+        }
+        @media (max-width: 900px) {
+            &__content {
+                flex-direction: column-reverse;
+                &__search {
+                    max-width: 50%;
+                    width: 50%;
+                    margin: 0 0 22px 45px !important;
+                }
+            }
+        }
     }
 
     &__columns {
