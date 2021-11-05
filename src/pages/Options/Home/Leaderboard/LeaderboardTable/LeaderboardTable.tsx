@@ -213,7 +213,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     ];
 
     const mapColumnWithLabel = (columnId: any) => {
-        return headCells.filter((column) => column.sortable).find((column) => column.id === columnId)?.label;
+        return headCells.filter((column) => column.sortable === true).find((column) => column.id === columnId)?.label;
     };
 
     return (

@@ -779,6 +779,7 @@
             "table": {
                 "rank-col": "等次",
                 "display-name-col": "显示名称",
+                "display-name-col-mobile": "姓名",
                 "trades-col": "交易",
                 "volume-col": "量",
                 "netprofit-col": "净利润",

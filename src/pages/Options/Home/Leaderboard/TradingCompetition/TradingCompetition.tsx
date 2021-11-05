@@ -271,7 +271,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     ];
 
     const mapColumnWithLabel = (columnId: any) => {
-        return headCells.filter((column) => column.sortable).find((column) => column.id === columnId)?.label;
+        return headCells.filter((column) => column.sortable === true).find((column) => column.id === columnId)?.label;
     };
 
     return (
@@ -359,9 +359,11 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                     title={t('options.leaderboard.table.netprofit-col-tooltip')}
                                                 ></TooltipIcon>
                                             )}
-                                            {cell.label}
+                                            {cell.id === 4 && isMobileView
+                                                ? t('options.leaderboard.table.display-name-col-mobile')
+                                                : cell.label}
                                         </TableHeaderLabel>
-                                        {(cell.id === 5 || cell.id === 6) && (
+                                        {(cell.id === 5 || cell.id === 6) && !isMobileView && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow
